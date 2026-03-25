@@ -1,0 +1,46 @@
+[
+  {
+    "id": "unit_conversion_001",
+    "original": "A shop has 7 boxes. Each box contains 4 marbles. How many marbles are there in total?",
+    "surface": "On planet Zyron, there are 7 energy pods. Each pod contains 4 litz. How many litz are there in total?",
+    "inverse": "A shop has 28 marbles divided equally into 7 boxes. How many marbles are in each box?",
+    "answers": {
+      "original": "28",
+      "surface": "28",
+      "inverse": "4"
+    }
+  },
+  {
+    "id": "fraction_remaining_001",
+    "original": "A store has 24 apples and sells one third of them. How many apples remain?",
+    "surface": "A spaceship has 24 fuel units and uses one third of them during launch. How many fuel units remain?",
+    "inverse": "After selling apples, a store has 16 apples left. If it sold one third of its apples, how many apples did it sell?",
+    "answers": {
+      "original": "16",
+      "surface": "16",
+      "inverse": "8"
+    }
+  },
+  {
+    "id": "comparison_trap_001",
+    "original": "Train A is 20 km/h faster than Train B. If Train B travels at 50 km/h, how fast is Train A?",
+    "surface": "Drone A is 20 m/s faster than Drone B. If Drone B travels at 50 m/s, how fast is Drone A?",
+    "inverse": "Train A travels at 70 km/h and is 20 km/h faster than Train B. How fast is Train B?",
+    "answers": {
+      "original": "70",
+      "surface": "70",
+      "inverse": "50"
+    }
+  },
+  {
+    "id": "chain_extension_001",
+    "original": "Lan has 3 boxes. Each box contains 5 bags. Each bag contains 2 marbles. How many marbles does Lan have in total?",
+    "surface": "An engineer has 3 chambers. Each chamber contains 5 modules. Each module contains 2 energy cells. How many energy cells are there in total?",
+    "inverse": "Lan has 30 marbles stored in 3 identical boxes. Each box contains 5 bags. How many marbles are in each bag?",
+    "answers": {
+      "original": "30",
+      "surface": "30",
+      "inverse": "2"
+    }
+  }
+]
