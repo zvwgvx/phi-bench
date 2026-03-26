@@ -1,0 +1,338 @@
+[
+  {
+    "family_id": "group_multiplication",
+    "instance_id": "group_multiplication_001",
+    "split": "pilot_eval",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "values": { "groups": 6, "per_group": 7, "total": 42 },
+    "render_plan": {
+      "original_context": { "group_noun": "crates", "item_noun": "bolts" },
+      "surface_context": { "group_noun": "racks", "item_noun": "cells", "setting": "orbital lab" },
+      "inverse_target": "per_group"
+    },
+    "answers": { "original": 42, "surface": 42, "inverse": 7 }
+  },
+  {
+    "family_id": "group_multiplication",
+    "instance_id": "group_multiplication_002",
+    "split": "pilot_eval",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "values": { "groups": 8, "per_group": 5, "total": 40 },
+    "render_plan": {
+      "original_context": { "group_noun": "baskets", "item_noun": "pears" },
+      "surface_context": { "group_noun": "cargo bays", "item_noun": "ore packs", "setting": "mining shuttle" },
+      "inverse_target": "per_group"
+    },
+    "answers": { "original": 40, "surface": 40, "inverse": 5 }
+  },
+  {
+    "family_id": "group_multiplication",
+    "instance_id": "group_multiplication_003",
+    "split": "pilot_eval",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "values": { "groups": 9, "per_group": 3, "total": 27 },
+    "render_plan": {
+      "original_context": { "group_noun": "folders", "item_noun": "forms" },
+      "surface_context": { "group_noun": "storage trays", "item_noun": "data cards", "setting": "archive station" },
+      "inverse_target": "per_group"
+    },
+    "answers": { "original": 27, "surface": 27, "inverse": 3 }
+  },
+  {
+    "family_id": "group_multiplication",
+    "instance_id": "group_multiplication_004",
+    "split": "pilot_eval",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "values": { "groups": 4, "per_group": 12, "total": 48 },
+    "render_plan": {
+      "original_context": { "group_noun": "trays", "item_noun": "cookies" },
+      "surface_context": { "group_noun": "launch racks", "item_noun": "signal flares", "setting": "desert outpost" },
+      "inverse_target": "per_group"
+    },
+    "answers": { "original": 48, "surface": 48, "inverse": 12 }
+  },
+  {
+    "family_id": "group_multiplication",
+    "instance_id": "group_multiplication_005",
+    "split": "pilot_eval",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "values": { "groups": 7, "per_group": 6, "total": 42 },
+    "render_plan": {
+      "original_context": { "group_noun": "jars", "item_noun": "beads" },
+      "surface_context": { "group_noun": "sample tubes", "item_noun": "crystals", "setting": "polar research dome" },
+      "inverse_target": "per_group"
+    },
+    "answers": { "original": 42, "surface": 42, "inverse": 6 }
+  },
+  {
+    "family_id": "group_multiplication",
+    "instance_id": "group_multiplication_006",
+    "split": "pilot_eval",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "values": { "groups": 5, "per_group": 11, "total": 55 },
+    "render_plan": {
+      "original_context": { "group_noun": "shelves", "item_noun": "books" },
+      "surface_context": { "group_noun": "server racks", "item_noun": "drive modules", "setting": "data vault" },
+      "inverse_target": "per_group"
+    },
+    "answers": { "original": 55, "surface": 55, "inverse": 11 }
+  },
+  {
+    "family_id": "fraction_remaining",
+    "instance_id": "fraction_remaining_001",
+    "split": "pilot_eval",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "values": { "total": 30, "fraction_num": 1, "fraction_den": 2, "used": 15, "remain": 15 },
+    "render_plan": {
+      "original_context": { "item_noun": "tickets" },
+      "surface_context": { "item_noun": "thruster charges", "setting": "flight deck" },
+      "inverse_target": "used"
+    },
+    "answers": { "original": 15, "surface": 15, "inverse": 15 }
+  },
+  {
+    "family_id": "fraction_remaining",
+    "instance_id": "fraction_remaining_002",
+    "split": "pilot_eval",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "values": { "total": 36, "fraction_num": 1, "fraction_den": 3, "used": 12, "remain": 24 },
+    "render_plan": {
+      "original_context": { "item_noun": "oranges" },
+      "surface_context": { "item_noun": "fuel cells", "setting": "cargo shuttle" },
+      "inverse_target": "used"
+    },
+    "answers": { "original": 24, "surface": 24, "inverse": 12 }
+  },
+  {
+    "family_id": "fraction_remaining",
+    "instance_id": "fraction_remaining_003",
+    "split": "pilot_eval",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "values": { "total": 28, "fraction_num": 1, "fraction_den": 4, "used": 7, "remain": 21 },
+    "render_plan": {
+      "original_context": { "item_noun": "candles" },
+      "surface_context": { "item_noun": "coolant canisters", "setting": "reactor room" },
+      "inverse_target": "used"
+    },
+    "answers": { "original": 21, "surface": 21, "inverse": 7 }
+  },
+  {
+    "family_id": "fraction_remaining",
+    "instance_id": "fraction_remaining_004",
+    "split": "pilot_eval",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 2,
+    "values": { "total": 40, "fraction_num": 2, "fraction_den": 5, "used": 16, "remain": 24 },
+    "render_plan": {
+      "original_context": { "item_noun": "batteries" },
+      "surface_context": { "item_noun": "shield charges", "setting": "patrol cruiser" },
+      "inverse_target": "used"
+    },
+    "answers": { "original": 24, "surface": 24, "inverse": 16 }
+  },
+  {
+    "family_id": "fraction_remaining",
+    "instance_id": "fraction_remaining_005",
+    "split": "pilot_eval",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "values": { "total": 54, "fraction_num": 1, "fraction_den": 3, "used": 18, "remain": 36 },
+    "render_plan": {
+      "original_context": { "item_noun": "cards" },
+      "surface_context": { "item_noun": "signal chips", "setting": "relay tower" },
+      "inverse_target": "used"
+    },
+    "answers": { "original": 36, "surface": 36, "inverse": 18 }
+  },
+  {
+    "family_id": "fraction_remaining",
+    "instance_id": "fraction_remaining_006",
+    "split": "pilot_eval",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "values": { "total": 48, "fraction_num": 1, "fraction_den": 4, "used": 12, "remain": 36 },
+    "render_plan": {
+      "original_context": { "item_noun": "liters of paint" },
+      "surface_context": { "item_noun": "oxygen tanks", "setting": "subsea station" },
+      "inverse_target": "used"
+    },
+    "answers": { "original": 36, "surface": 36, "inverse": 12 }
+  },
+  {
+    "family_id": "difference_comparison",
+    "instance_id": "difference_comparison_001",
+    "split": "pilot_eval",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "values": { "base": 25, "delta": 15, "target": 40 },
+    "render_plan": {
+      "original_context": { "subject_a": "Bike A", "subject_b": "Bike B", "unit": "km/h", "relation": "faster" },
+      "surface_context": { "subject_a": "Drone A", "subject_b": "Drone B", "unit": "m/s", "relation": "faster" },
+      "inverse_target": "base"
+    },
+    "answers": { "original": 40, "surface": 40, "inverse": 25 }
+  },
+  {
+    "family_id": "difference_comparison",
+    "instance_id": "difference_comparison_002",
+    "split": "pilot_eval",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "values": { "base": 12, "delta": 8, "target": 20 },
+    "render_plan": {
+      "original_context": { "subject_a": "Room A", "subject_b": "Room B", "unit": "degrees", "relation": "warmer" },
+      "surface_context": { "subject_a": "Chamber A", "subject_b": "Chamber B", "unit": "degrees", "relation": "warmer" },
+      "inverse_target": "base"
+    },
+    "answers": { "original": 20, "surface": 20, "inverse": 12 }
+  },
+  {
+    "family_id": "difference_comparison",
+    "instance_id": "difference_comparison_003",
+    "split": "pilot_eval",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "values": { "base": 18, "delta": 12, "target": 30 },
+    "render_plan": {
+      "original_context": { "subject_a": "Robot A", "subject_b": "Robot B", "unit": "kg", "relation": "more" },
+      "surface_context": { "subject_a": "Loader A", "subject_b": "Loader B", "unit": "kg", "relation": "more" },
+      "inverse_target": "base"
+    },
+    "answers": { "original": 30, "surface": 30, "inverse": 18 }
+  },
+  {
+    "family_id": "difference_comparison",
+    "instance_id": "difference_comparison_004",
+    "split": "pilot_eval",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "values": { "base": 70, "delta": 30, "target": 100 },
+    "render_plan": {
+      "original_context": { "subject_a": "Path A", "subject_b": "Path B", "unit": "m", "relation": "longer" },
+      "surface_context": { "subject_a": "Tunnel A", "subject_b": "Tunnel B", "unit": "m", "relation": "longer" },
+      "inverse_target": "base"
+    },
+    "answers": { "original": 100, "surface": 100, "inverse": 70 }
+  },
+  {
+    "family_id": "difference_comparison",
+    "instance_id": "difference_comparison_005",
+    "split": "pilot_eval",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "values": { "base": 21, "delta": 9, "target": 30 },
+    "render_plan": {
+      "original_context": { "subject_a": "Team A", "subject_b": "Team B", "unit": "points", "relation": "more" },
+      "surface_context": { "subject_a": "Squad A", "subject_b": "Squad B", "unit": "points", "relation": "more" },
+      "inverse_target": "base"
+    },
+    "answers": { "original": 30, "surface": 30, "inverse": 21 }
+  },
+  {
+    "family_id": "difference_comparison",
+    "instance_id": "difference_comparison_006",
+    "split": "pilot_eval",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "values": { "base": 16, "delta": 14, "target": 30 },
+    "render_plan": {
+      "original_context": { "subject_a": "Sensor A", "subject_b": "Sensor B", "unit": "units", "relation": "higher" },
+      "surface_context": { "subject_a": "Beacon A", "subject_b": "Beacon B", "unit": "units", "relation": "higher" },
+      "inverse_target": "base"
+    },
+    "answers": { "original": 30, "surface": 30, "inverse": 16 }
+  },
+  {
+    "family_id": "nested_chain_multiplication",
+    "instance_id": "nested_chain_multiplication_001",
+    "split": "pilot_eval",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "values": { "outer": 3, "middle": 4, "inner": 2, "total": 24 },
+    "render_plan": {
+      "original_context": { "outer_noun": "boxes", "middle_noun": "packs", "inner_noun": "cards" },
+      "surface_context": { "outer_noun": "containers", "middle_noun": "frames", "inner_noun": "signal chips", "setting": "survey drone" },
+      "inverse_target": "inner"
+    },
+    "answers": { "original": 24, "surface": 24, "inverse": 2 }
+  },
+  {
+    "family_id": "nested_chain_multiplication",
+    "instance_id": "nested_chain_multiplication_002",
+    "split": "pilot_eval",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "values": { "outer": 2, "middle": 6, "inner": 5, "total": 60 },
+    "render_plan": {
+      "original_context": { "outer_noun": "shelves", "middle_noun": "folders", "inner_noun": "sheets" },
+      "surface_context": { "outer_noun": "vaults", "middle_noun": "drawers", "inner_noun": "codes", "setting": "security archive" },
+      "inverse_target": "inner"
+    },
+    "answers": { "original": 60, "surface": 60, "inverse": 5 }
+  },
+  {
+    "family_id": "nested_chain_multiplication",
+    "instance_id": "nested_chain_multiplication_003",
+    "split": "pilot_eval",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "values": { "outer": 5, "middle": 3, "inner": 4, "total": 60 },
+    "render_plan": {
+      "original_context": { "outer_noun": "trees", "middle_noun": "branches", "inner_noun": "nests" },
+      "surface_context": { "outer_noun": "towers", "middle_noun": "platforms", "inner_noun": "antennae", "setting": "storm grid" },
+      "inverse_target": "inner"
+    },
+    "answers": { "original": 60, "surface": 60, "inverse": 4 }
+  },
+  {
+    "family_id": "nested_chain_multiplication",
+    "instance_id": "nested_chain_multiplication_004",
+    "split": "pilot_eval",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "values": { "outer": 4, "middle": 2, "inner": 7, "total": 56 },
+    "render_plan": {
+      "original_context": { "outer_noun": "cabinets", "middle_noun": "drawers", "inner_noun": "files" },
+      "surface_context": { "outer_noun": "hangars", "middle_noun": "bays", "inner_noun": "repair kits", "setting": "maintenance deck" },
+      "inverse_target": "inner"
+    },
+    "answers": { "original": 56, "surface": 56, "inverse": 7 }
+  },
+  {
+    "family_id": "nested_chain_multiplication",
+    "instance_id": "nested_chain_multiplication_005",
+    "split": "pilot_eval",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "values": { "outer": 6, "middle": 3, "inner": 2, "total": 36 },
+    "render_plan": {
+      "original_context": { "outer_noun": "stations", "middle_noun": "pods", "inner_noun": "helmets" },
+      "surface_context": { "outer_noun": "docks", "middle_noun": "crates", "inner_noun": "power cores", "setting": "cargo ring" },
+      "inverse_target": "inner"
+    },
+    "answers": { "original": 36, "surface": 36, "inverse": 2 }
+  },
+  {
+    "family_id": "nested_chain_multiplication",
+    "instance_id": "nested_chain_multiplication_006",
+    "split": "pilot_eval",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "values": { "outer": 3, "middle": 5, "inner": 6, "total": 90 },
+    "render_plan": {
+      "original_context": { "outer_noun": "tanks", "middle_noun": "crates", "inner_noun": "tubes" },
+      "surface_context": { "outer_noun": "vault rooms", "middle_noun": "lockers", "inner_noun": "sensor rods", "setting": "deep facility" },
+      "inverse_target": "inner"
+    },
+    "answers": { "original": 90, "surface": 90, "inverse": 6 }
+  }
+]

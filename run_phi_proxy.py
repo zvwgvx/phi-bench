@@ -22,6 +22,7 @@ class PromptCache:
     prompt: str
     model_prompt: str
     input_ids: List[int]
+    prompt_token_indices: List[int]
     hidden_states: List[np.ndarray]
     generated_text: str
 
@@ -101,12 +102,38 @@ def normalize_token(token: str) -> str:
     return token
 
 
-def build_content_indices(input_ids: Sequence[int], tokenizer) -> np.ndarray:
+def build_prompt_token_indices(
+    input_ids: Sequence[int],
+    offset_mapping: Sequence[Sequence[int]],
+    tokenizer,
+    prompt_start: int,
+    prompt_end: int,
+) -> List[int]:
+    special_ids = set(tokenizer.all_special_ids)
+    indices: List[int] = []
+    for idx, (token_id, offsets) in enumerate(zip(input_ids, offset_mapping)):
+        if token_id in special_ids:
+            continue
+        start, end = int(offsets[0]), int(offsets[1])
+        if end <= start:
+            continue
+        if end <= prompt_start or start >= prompt_end:
+            continue
+        indices.append(idx)
+    if not indices:
+        raise ValueError("Failed to locate prompt token span inside model prompt.")
+    return indices
+
+
+def build_content_indices(prompt_cache: PromptCache, tokenizer) -> np.ndarray:
     indices: List[int] = []
     special_ids = set(tokenizer.all_special_ids)
-    tokens = tokenizer.convert_ids_to_tokens(input_ids)
+    tokens = tokenizer.convert_ids_to_tokens(prompt_cache.input_ids)
+    allowed = set(prompt_cache.prompt_token_indices)
 
-    for idx, (token_id, token) in enumerate(zip(input_ids, tokens)):
+    for idx, (token_id, token) in enumerate(zip(prompt_cache.input_ids, tokens)):
+        if idx not in allowed:
+            continue
         if token_id in special_ids:
             continue
         clean = normalize_token(token)
@@ -153,7 +180,22 @@ def collect_prompt_cache(
             for key in PROMPT_KEYS:
                 prompt = triplet[key]
                 model_prompt = build_model_prompt(prompt)
-                encoded = tokenizer(model_prompt, return_tensors="pt")
+                encoded = tokenizer(
+                    model_prompt,
+                    return_tensors="pt",
+                    return_offsets_mapping=True,
+                )
+                offset_mapping = encoded.pop("offset_mapping")[0].tolist()
+                prompt_start = len(PROMPT_PREFIX)
+                prompt_end = prompt_start + len(prompt)
+                input_ids_cpu = encoded["input_ids"][0].detach().cpu().tolist()
+                prompt_token_indices = build_prompt_token_indices(
+                    input_ids=input_ids_cpu,
+                    offset_mapping=offset_mapping,
+                    tokenizer=tokenizer,
+                    prompt_start=prompt_start,
+                    prompt_end=prompt_end,
+                )
                 encoded = {name: value.to(device) for name, value in encoded.items()}
                 outputs = model(**encoded, output_hidden_states=True, use_cache=False)
                 generated_ids = model.generate(
@@ -174,7 +216,8 @@ def collect_prompt_cache(
                 triplet_cache[key] = PromptCache(
                     prompt=prompt,
                     model_prompt=model_prompt,
-                    input_ids=encoded["input_ids"][0].detach().cpu().tolist(),
+                    input_ids=input_ids_cpu,
+                    prompt_token_indices=prompt_token_indices,
                     hidden_states=hidden_states,
                     generated_text=generated_text,
                 )
@@ -225,11 +268,46 @@ def gather_projection_matrix(
     rows: List[np.ndarray] = []
     for triplet_cache in cache.values():
         for prompt_cache in triplet_cache.values():
-            content_indices = build_content_indices(prompt_cache.input_ids, tokenizer)
+            content_indices = build_content_indices(prompt_cache, tokenizer)
             selected_indices = select_indices(content_indices, aggregation, window_size)
             for layer in prompt_cache.hidden_states:
                 rows.append(layer[selected_indices])
     return np.concatenate(rows, axis=0)
+
+
+def collect_sample_counts(
+    cache: Dict[str, Dict[str, PromptCache]],
+    tokenizer,
+    aggregation: str,
+    window_size: int,
+) -> List[int]:
+    counts: List[int] = []
+    for triplet_cache in cache.values():
+        for prompt_cache in triplet_cache.values():
+            content_indices = build_content_indices(prompt_cache, tokenizer)
+            selected_indices = select_indices(content_indices, aggregation, window_size)
+            counts.append(int(selected_indices.shape[0]))
+    return counts
+
+
+def resolve_effective_d_proj(requested_d_proj: int, sample_counts: Sequence[int]) -> Dict[str, float]:
+    if not sample_counts:
+        raise ValueError("No sample counts available to resolve d_proj.")
+    min_sample_count = int(min(sample_counts))
+    max_candidate = max(2, (min_sample_count - 1) // 2)
+    max_even_d_proj = max_candidate if max_candidate % 2 == 0 else max_candidate - 1
+    max_even_d_proj = max(2, max_even_d_proj)
+    effective_d_proj = min(requested_d_proj, max_even_d_proj)
+    if effective_d_proj % 2 != 0:
+        effective_d_proj -= 1
+    effective_d_proj = max(2, effective_d_proj)
+    return {
+        "requested_d_proj": int(requested_d_proj),
+        "effective_d_proj": int(effective_d_proj),
+        "min_prompt_sample_count": min_sample_count,
+        "max_prompt_sample_count": int(max(sample_counts)),
+        "mean_prompt_sample_count": float(np.mean(sample_counts)),
+    }
 
 
 def create_projector(
@@ -333,7 +411,7 @@ def build_projected_layers(
     aggregation: str,
     window_size: int,
 ) -> tuple[List[np.ndarray], int]:
-    content_indices = build_content_indices(prompt_cache.input_ids, tokenizer)
+    content_indices = build_content_indices(prompt_cache, tokenizer)
     selected_indices = select_indices(content_indices, aggregation, window_size)
     projected_layers: List[np.ndarray] = []
     for layer in prompt_cache.hidden_states:
@@ -435,9 +513,36 @@ def compute_pair_stability(
     }
 
 
-def extract_first_number(text: str) -> str:
-    match = re.search(r"-?\d+(?:[.,]\d+)?", text)
-    return match.group(0).replace(",", ".") if match else ""
+def average_stability_dicts(items: Sequence[Dict[str, object]]) -> Dict[str, object]:
+    if not items:
+        raise ValueError("Cannot average an empty list of stability dictionaries.")
+    dispersion = np.mean(
+        [np.asarray(item["dispersion_by_layer"], dtype=np.float64) for item in items],
+        axis=0,
+    )
+    stability = np.mean(
+        [np.asarray(item["stability_by_layer"], dtype=np.float64) for item in items],
+        axis=0,
+    )
+    stability_global = float(np.mean([item["stability_global"] for item in items]))
+    return {
+        "dispersion_by_layer": dispersion.tolist(),
+        "stability_by_layer": stability.tolist(),
+        "stability_global": stability_global,
+    }
+
+
+def subtract_stability_dicts(
+    actual: Dict[str, object],
+    null: Dict[str, object],
+) -> Dict[str, object]:
+    actual_stability = np.asarray(actual["stability_by_layer"], dtype=np.float64)
+    null_stability = np.asarray(null["stability_by_layer"], dtype=np.float64)
+    delta = actual_stability - null_stability
+    return {
+        "delta_by_layer": delta.tolist(),
+        "delta_global": float(np.mean(delta)),
+    }
 
 
 def extract_number_candidates(text: str) -> List[str]:
@@ -496,7 +601,7 @@ def score_prediction(prediction: str, answer: str) -> Dict[str, object]:
 
 def prepare_experiment(
     args: argparse.Namespace,
-) -> tuple[List[dict], object, Dict[str, Dict[str, PromptCache]], np.ndarray]:
+) -> tuple[List[dict], object, Dict[str, Dict[str, PromptCache]], np.ndarray, Dict[str, float]]:
     triplets_path = Path(args.triplets_path)
     triplets = load_triplets(triplets_path)
     tokenizer, model = load_model(args.model_path, args.device)
@@ -515,7 +620,14 @@ def prepare_experiment(
         aggregation=args.aggregation,
         window_size=args.window_size,
     )
-    return triplets, tokenizer, cache, projection_matrix
+    sample_counts = collect_sample_counts(
+        cache=cache,
+        tokenizer=tokenizer,
+        aggregation=args.aggregation,
+        window_size=args.window_size,
+    )
+    d_proj_info = resolve_effective_d_proj(args.d_proj, sample_counts)
+    return triplets, tokenizer, cache, projection_matrix, d_proj_info
 
 
 def execute_experiment_with_prepared(
@@ -524,12 +636,14 @@ def execute_experiment_with_prepared(
     tokenizer,
     cache: Dict[str, Dict[str, PromptCache]],
     projection_matrix: np.ndarray,
+    d_proj_info: Dict[str, float],
 ) -> dict:
     triplets_path = Path(args.triplets_path)
+    effective_d_proj = int(d_proj_info["effective_d_proj"])
     projector = create_projector(
         projector_name=args.projector,
         projection_matrix=projection_matrix,
-        output_dim=args.d_proj,
+        output_dim=effective_d_proj,
         seed=args.random_seed,
     )
 
@@ -546,7 +660,7 @@ def execute_experiment_with_prepared(
                 aggregation=args.aggregation,
                 window_size=args.window_size,
                 partitions=args.partitions,
-                d_proj=args.d_proj,
+                d_proj=effective_d_proj,
                 seed=args.random_seed,
                 ridge=args.ridge,
             )
@@ -582,6 +696,36 @@ def execute_experiment_with_prepared(
             }
         )
 
+    for index, result in enumerate(results):
+        surface_null_candidates = []
+        inverse_null_candidates = []
+        for other_index, other in enumerate(results):
+            if index == other_index:
+                continue
+            surface_null_candidates.append(
+                compute_pair_stability(
+                    phi_left=result["prompt_results"]["original"]["phi_signed_profile"],
+                    phi_right=other["prompt_results"]["surface"]["phi_signed_profile"],
+                )
+            )
+            inverse_null_candidates.append(
+                compute_pair_stability(
+                    phi_left=result["prompt_results"]["original"]["phi_signed_profile"],
+                    phi_right=other["prompt_results"]["inverse"]["phi_signed_profile"],
+                )
+            )
+
+        surface_null = average_stability_dicts(surface_null_candidates)
+        inverse_null = average_stability_dicts(inverse_null_candidates)
+        result["surface_null_stability"] = surface_null
+        result["inverse_null_stability"] = inverse_null
+        result["surface_delta_stability"] = subtract_stability_dicts(
+            result["surface_stability"], surface_null
+        )
+        result["inverse_delta_stability"] = subtract_stability_dicts(
+            result["inverse_stability"], inverse_null
+        )
+
     accuracy_values = [
         int(item["scores"][prompt_key]["is_correct"])
         for item in results
@@ -599,6 +743,18 @@ def execute_experiment_with_prepared(
         "mean_inverse_stability_global": float(
             np.mean([item["inverse_stability"]["stability_global"] for item in results])
         ),
+        "mean_surface_null_stability_global": float(
+            np.mean([item["surface_null_stability"]["stability_global"] for item in results])
+        ),
+        "mean_inverse_null_stability_global": float(
+            np.mean([item["inverse_null_stability"]["stability_global"] for item in results])
+        ),
+        "mean_surface_delta_stability_global": float(
+            np.mean([item["surface_delta_stability"]["delta_global"] for item in results])
+        ),
+        "mean_inverse_delta_stability_global": float(
+            np.mean([item["inverse_delta_stability"]["delta_global"] for item in results])
+        ),
     }
 
     return {
@@ -608,7 +764,11 @@ def execute_experiment_with_prepared(
             "aggregation": args.aggregation,
             "projector": args.projector,
             "partitions": list(args.partitions),
-            "d_proj": args.d_proj,
+            "requested_d_proj": args.d_proj,
+            "effective_d_proj": effective_d_proj,
+            "min_prompt_sample_count": d_proj_info["min_prompt_sample_count"],
+            "max_prompt_sample_count": d_proj_info["max_prompt_sample_count"],
+            "mean_prompt_sample_count": d_proj_info["mean_prompt_sample_count"],
             "window_size": args.window_size,
             "ridge": args.ridge,
             "random_seed": args.random_seed,
@@ -620,13 +780,14 @@ def execute_experiment_with_prepared(
 
 
 def execute_experiment(args: argparse.Namespace) -> dict:
-    triplets, tokenizer, cache, projection_matrix = prepare_experiment(args)
+    triplets, tokenizer, cache, projection_matrix, d_proj_info = prepare_experiment(args)
     return execute_experiment_with_prepared(
         args=args,
         triplets=triplets,
         tokenizer=tokenizer,
         cache=cache,
         projection_matrix=projection_matrix,
+        d_proj_info=d_proj_info,
     )
 
 
@@ -646,7 +807,7 @@ def run_ablation(args: argparse.Namespace) -> tuple[dict, Path]:
     original_projector = args.projector
     original_quiet = args.quiet
 
-    triplets, tokenizer, cache, projection_matrix = prepare_experiment(args)
+    triplets, tokenizer, cache, projection_matrix, d_proj_info = prepare_experiment(args)
 
     records = []
     for d_proj in args.ablation_d_proj:
@@ -660,16 +821,30 @@ def run_ablation(args: argparse.Namespace) -> tuple[dict, Path]:
                 tokenizer=tokenizer,
                 cache=cache,
                 projection_matrix=projection_matrix,
+                d_proj_info=d_proj_info,
             )
             summary = payload["summary"]
             records.append(
                 {
-                    "d_proj": d_proj,
+                    "requested_d_proj": d_proj,
+                    "effective_d_proj": payload["config"]["effective_d_proj"],
                     "projector": projector,
                     "overall_accuracy": summary["overall_accuracy"],
                     "mean_phi_stability_global": summary["mean_phi_stability_global"],
                     "mean_surface_stability_global": summary["mean_surface_stability_global"],
                     "mean_inverse_stability_global": summary["mean_inverse_stability_global"],
+                    "mean_surface_null_stability_global": summary[
+                        "mean_surface_null_stability_global"
+                    ],
+                    "mean_inverse_null_stability_global": summary[
+                        "mean_inverse_null_stability_global"
+                    ],
+                    "mean_surface_delta_stability_global": summary[
+                        "mean_surface_delta_stability_global"
+                    ],
+                    "mean_inverse_delta_stability_global": summary[
+                        "mean_inverse_delta_stability_global"
+                    ],
                 }
             )
 
@@ -701,14 +876,24 @@ def print_summary(payload: dict, output_path: Path) -> None:
         "Summary:"
         f" triplets={payload['summary']['triplet_count']},"
         f" overall_accuracy={payload['summary']['overall_accuracy']:.4f},"
+        f" requested_d_proj={payload['config']['requested_d_proj']},"
+        f" effective_d_proj={payload['config']['effective_d_proj']},"
         f" mean_phi_stability_global={payload['summary']['mean_phi_stability_global']:.4f},"
         f" mean_surface_stability_global={payload['summary']['mean_surface_stability_global']:.4f},"
-        f" mean_inverse_stability_global={payload['summary']['mean_inverse_stability_global']:.4f}"
+        f" mean_inverse_stability_global={payload['summary']['mean_inverse_stability_global']:.4f},"
+        f" mean_surface_null_stability_global={payload['summary']['mean_surface_null_stability_global']:.4f},"
+        f" mean_inverse_null_stability_global={payload['summary']['mean_inverse_null_stability_global']:.4f},"
+        f" mean_surface_delta_stability_global={payload['summary']['mean_surface_delta_stability_global']:.4f},"
+        f" mean_inverse_delta_stability_global={payload['summary']['mean_inverse_delta_stability_global']:.4f}"
     )
     for item in payload["results"]:
         stability = item["phi_stability"]["stability_global"]
         surface_stability = item["surface_stability"]["stability_global"]
         inverse_stability = item["inverse_stability"]["stability_global"]
+        surface_null = item["surface_null_stability"]["stability_global"]
+        inverse_null = item["inverse_null_stability"]["stability_global"]
+        surface_delta = item["surface_delta_stability"]["delta_global"]
+        inverse_delta = item["inverse_delta_stability"]["delta_global"]
         score_summary = ", ".join(
             f"{key}={'1' if item['scores'][key]['is_correct'] else '0'}"
             for key in PROMPT_KEYS
@@ -718,20 +903,33 @@ def print_summary(payload: dict, output_path: Path) -> None:
             f" phi_stability_global={stability:.4f},"
             f" surface_stability_global={surface_stability:.4f},"
             f" inverse_stability_global={inverse_stability:.4f},"
+            f" surface_null={surface_null:.4f},"
+            f" inverse_null={inverse_null:.4f},"
+            f" surface_delta={surface_delta:.4f},"
+            f" inverse_delta={inverse_delta:.4f},"
             f" scores[{score_summary}]"
         )
 
 
 def print_ablation_summary(payload: dict, output_path: Path) -> None:
     print(f"Ablation results saved to: {output_path}")
-    print("d_proj | projector | accuracy | surface_stability | inverse_stability | phi_stability")
+    print(
+        "req_d | eff_d | projector | accuracy | "
+        "surface_stability | surface_null | surface_delta | "
+        "inverse_stability | inverse_null | inverse_delta | phi_stability"
+    )
     for record in payload["records"]:
         print(
-            f"{record['d_proj']:>6} | "
+            f"{record['requested_d_proj']:>5} | "
+            f"{record['effective_d_proj']:>5} | "
             f"{record['projector']:<13} | "
             f"{record['overall_accuracy']:.4f} | "
             f"{record['mean_surface_stability_global']:.4f} | "
+            f"{record['mean_surface_null_stability_global']:.4f} | "
+            f"{record['mean_surface_delta_stability_global']:.4f} | "
             f"{record['mean_inverse_stability_global']:.4f} | "
+            f"{record['mean_inverse_null_stability_global']:.4f} | "
+            f"{record['mean_inverse_delta_stability_global']:.4f} | "
             f"{record['mean_phi_stability_global']:.4f}"
         )
 

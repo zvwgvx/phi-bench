@@ -1,0 +1,242 @@
+[
+  {
+    "id": "group_multiplication_001",
+    "family_id": "group_multiplication",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "original": "A workshop has 6 crates. Each crate holds 7 bolts. How many bolts are there in total?",
+    "surface": "An orbital lab has 6 racks. Each rack holds 7 energy cells. How many energy cells are there in total?",
+    "inverse": "A workshop has 42 bolts packed equally into 6 crates. How many bolts are in each crate?",
+    "answers": { "original": "42", "surface": "42", "inverse": "7" }
+  },
+  {
+    "id": "group_multiplication_002",
+    "family_id": "group_multiplication",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "original": "A market has 8 baskets. Each basket contains 5 pears. How many pears are there in total?",
+    "surface": "A mining shuttle has 8 cargo bays. Each bay contains 5 ore packs. How many ore packs are there in total?",
+    "inverse": "A market has 40 pears packed equally into 8 baskets. How many pears are in each basket?",
+    "answers": { "original": "40", "surface": "40", "inverse": "5" }
+  },
+  {
+    "id": "group_multiplication_003",
+    "family_id": "group_multiplication",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "original": "An office has 9 folders. Each folder contains 3 forms. How many forms are there in total?",
+    "surface": "An archive station has 9 storage trays. Each tray contains 3 data cards. How many data cards are there in total?",
+    "inverse": "An office has 27 forms packed equally into 9 folders. How many forms are in each folder?",
+    "answers": { "original": "27", "surface": "27", "inverse": "3" }
+  },
+  {
+    "id": "group_multiplication_004",
+    "family_id": "group_multiplication",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "original": "A bakery has 4 trays. Each tray holds 12 cookies. How many cookies are there in total?",
+    "surface": "A desert outpost has 4 launch racks. Each rack holds 12 signal flares. How many signal flares are there in total?",
+    "inverse": "A bakery has 48 cookies arranged equally on 4 trays. How many cookies are on each tray?",
+    "answers": { "original": "48", "surface": "48", "inverse": "12" }
+  },
+  {
+    "id": "group_multiplication_005",
+    "family_id": "group_multiplication",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "original": "A craft table has 7 jars. Each jar contains 6 beads. How many beads are there in total?",
+    "surface": "A polar research dome has 7 sample tubes. Each tube contains 6 crystals. How many crystals are there in total?",
+    "inverse": "A craft table has 42 beads divided equally into 7 jars. How many beads are in each jar?",
+    "answers": { "original": "42", "surface": "42", "inverse": "6" }
+  },
+  {
+    "id": "group_multiplication_006",
+    "family_id": "group_multiplication",
+    "logic_template": "groups * per_group = total",
+    "difficulty": 1,
+    "original": "A library has 5 shelves. Each shelf holds 11 books. How many books are there in total?",
+    "surface": "A data vault has 5 server racks. Each rack holds 11 drive modules. How many drive modules are there in total?",
+    "inverse": "A library has 55 books spread equally across 5 shelves. How many books are on each shelf?",
+    "answers": { "original": "55", "surface": "55", "inverse": "11" }
+  },
+  {
+    "id": "fraction_remaining_001",
+    "family_id": "fraction_remaining",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "original": "A booth has 30 tickets and uses one half of them. How many tickets remain?",
+    "surface": "A flight deck has 30 thruster charges and uses one half of them. How many thruster charges remain?",
+    "inverse": "After using tickets, a booth has 15 tickets left. If it used one half of its tickets, how many tickets did it use?",
+    "answers": { "original": "15", "surface": "15", "inverse": "15" }
+  },
+  {
+    "id": "fraction_remaining_002",
+    "family_id": "fraction_remaining",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "original": "A fruit stand has 36 oranges and gives away one third of them. How many oranges remain?",
+    "surface": "A cargo shuttle has 36 fuel cells and uses one third of them. How many fuel cells remain?",
+    "inverse": "After using fuel cells, a cargo shuttle has 24 fuel cells left. If it used one third of them, how many fuel cells did it use?",
+    "answers": { "original": "24", "surface": "24", "inverse": "12" }
+  },
+  {
+    "id": "fraction_remaining_003",
+    "family_id": "fraction_remaining",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "original": "A shop has 28 candles and burns one fourth of them. How many candles remain?",
+    "surface": "A reactor room has 28 coolant canisters and uses one fourth of them. How many coolant canisters remain?",
+    "inverse": "After using coolant canisters, a reactor room has 21 canisters left. If it used one fourth of them, how many canisters did it use?",
+    "answers": { "original": "21", "surface": "21", "inverse": "7" }
+  },
+  {
+    "id": "fraction_remaining_004",
+    "family_id": "fraction_remaining",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 2,
+    "original": "A toolbox has 40 batteries and uses two fifths of them. How many batteries remain?",
+    "surface": "A patrol cruiser has 40 shield charges and spends two fifths of them. How many shield charges remain?",
+    "inverse": "After spending shield charges, a patrol cruiser has 24 charges left. If it spent two fifths of them, how many charges did it spend?",
+    "answers": { "original": "24", "surface": "24", "inverse": "16" }
+  },
+  {
+    "id": "fraction_remaining_005",
+    "family_id": "fraction_remaining",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "original": "A table has 54 cards and loses one third of them. How many cards remain?",
+    "surface": "A relay tower has 54 signal chips and uses one third of them. How many signal chips remain?",
+    "inverse": "After using signal chips, a relay tower has 36 chips left. If it used one third of them, how many chips did it use?",
+    "answers": { "original": "36", "surface": "36", "inverse": "18" }
+  },
+  {
+    "id": "fraction_remaining_006",
+    "family_id": "fraction_remaining",
+    "logic_template": "total - fraction_of_total = remain",
+    "difficulty": 1,
+    "original": "A painter has 48 liters of paint and spends one fourth of it. How many liters remain?",
+    "surface": "A subsea station has 48 oxygen tanks and uses one fourth of them. How many oxygen tanks remain?",
+    "inverse": "After using oxygen tanks, a subsea station has 36 tanks left. If it used one fourth of them, how many tanks did it use?",
+    "answers": { "original": "36", "surface": "36", "inverse": "12" }
+  },
+  {
+    "id": "difference_comparison_001",
+    "family_id": "difference_comparison",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "original": "Bike A is 15 km/h faster than Bike B. If Bike B travels at 25 km/h, how fast is Bike A?",
+    "surface": "Drone A is 15 m/s faster than Drone B. If Drone B travels at 25 m/s, how fast is Drone A?",
+    "inverse": "Bike A travels at 40 km/h and is 15 km/h faster than Bike B. How fast is Bike B?",
+    "answers": { "original": "40", "surface": "40", "inverse": "25" }
+  },
+  {
+    "id": "difference_comparison_002",
+    "family_id": "difference_comparison",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "original": "Room A is 8 degrees warmer than Room B. If Room B is at 12 degrees, what is the temperature of Room A?",
+    "surface": "Chamber A is 8 degrees warmer than Chamber B. If Chamber B is at 12 degrees, what is the temperature of Chamber A?",
+    "inverse": "Room A is at 20 degrees and is 8 degrees warmer than Room B. What is the temperature of Room B?",
+    "answers": { "original": "20", "surface": "20", "inverse": "12" }
+  },
+  {
+    "id": "difference_comparison_003",
+    "family_id": "difference_comparison",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "original": "Robot A can carry 12 kg more than Robot B. If Robot B can carry 18 kg, how many kilograms can Robot A carry?",
+    "surface": "Loader A can carry 12 kg more than Loader B. If Loader B can carry 18 kg, how many kilograms can Loader A carry?",
+    "inverse": "Robot A can carry 30 kg and that is 12 kg more than Robot B. How many kilograms can Robot B carry?",
+    "answers": { "original": "30", "surface": "30", "inverse": "18" }
+  },
+  {
+    "id": "difference_comparison_004",
+    "family_id": "difference_comparison",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "original": "Path A is 30 m longer than Path B. If Path B is 70 m long, how long is Path A?",
+    "surface": "Tunnel A is 30 m longer than Tunnel B. If Tunnel B is 70 m long, how long is Tunnel A?",
+    "inverse": "Path A is 100 m long and is 30 m longer than Path B. How long is Path B?",
+    "answers": { "original": "100", "surface": "100", "inverse": "70" }
+  },
+  {
+    "id": "difference_comparison_005",
+    "family_id": "difference_comparison",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "original": "Team A scored 9 more points than Team B. If Team B scored 21 points, how many points did Team A score?",
+    "surface": "Squad A scored 9 more points than Squad B. If Squad B scored 21 points, how many points did Squad A score?",
+    "inverse": "Team A scored 30 points and that is 9 points more than Team B. How many points did Team B score?",
+    "answers": { "original": "30", "surface": "30", "inverse": "21" }
+  },
+  {
+    "id": "difference_comparison_006",
+    "family_id": "difference_comparison",
+    "logic_template": "a = b + delta",
+    "difficulty": 1,
+    "original": "Sensor A reads 14 units higher than Sensor B. If Sensor B reads 16 units, what does Sensor A read?",
+    "surface": "Beacon A reads 14 units higher than Beacon B. If Beacon B reads 16 units, what does Beacon A read?",
+    "inverse": "Sensor A reads 30 units and that is 14 units higher than Sensor B. What does Sensor B read?",
+    "answers": { "original": "30", "surface": "30", "inverse": "16" }
+  },
+  {
+    "id": "nested_chain_multiplication_001",
+    "family_id": "nested_chain_multiplication",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "original": "A clerk has 3 boxes. Each box contains 4 packs. Each pack contains 2 cards. How many cards are there in total?",
+    "surface": "A survey drone has 3 containers. Each container holds 4 frames. Each frame holds 2 signal chips. How many signal chips are there in total?",
+    "inverse": "A clerk has 24 cards stored in 3 boxes. Each box contains 4 packs. How many cards are in each pack?",
+    "answers": { "original": "24", "surface": "24", "inverse": "2" }
+  },
+  {
+    "id": "nested_chain_multiplication_002",
+    "family_id": "nested_chain_multiplication",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "original": "A records room has 2 shelves. Each shelf contains 6 folders. Each folder contains 5 sheets. How many sheets are there in total?",
+    "surface": "A security archive has 2 vaults. Each vault contains 6 drawers. Each drawer contains 5 codes. How many codes are there in total?",
+    "inverse": "A records room has 60 sheets stored on 2 shelves. Each shelf contains 6 folders. How many sheets are in each folder?",
+    "answers": { "original": "60", "surface": "60", "inverse": "5" }
+  },
+  {
+    "id": "nested_chain_multiplication_003",
+    "family_id": "nested_chain_multiplication",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "original": "A grove has 5 trees. Each tree has 3 branches used in the count. Each branch has 4 nests. How many nests are there in total?",
+    "surface": "A storm grid has 5 towers. Each tower has 3 platforms. Each platform has 4 antennae. How many antennae are there in total?",
+    "inverse": "A grove has 60 nests counted across 5 trees. Each tree has 3 branches in the count. How many nests are on each branch?",
+    "answers": { "original": "60", "surface": "60", "inverse": "4" }
+  },
+  {
+    "id": "nested_chain_multiplication_004",
+    "family_id": "nested_chain_multiplication",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "original": "An office has 4 cabinets. Each cabinet has 2 drawers. Each drawer contains 7 files. How many files are there in total?",
+    "surface": "A maintenance deck has 4 hangars. Each hangar has 2 bays. Each bay contains 7 repair kits. How many repair kits are there in total?",
+    "inverse": "An office has 56 files stored in 4 cabinets. Each cabinet has 2 drawers. How many files are in each drawer?",
+    "answers": { "original": "56", "surface": "56", "inverse": "7" }
+  },
+  {
+    "id": "nested_chain_multiplication_005",
+    "family_id": "nested_chain_multiplication",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "original": "A depot has 6 stations. Each station has 3 pods. Each pod contains 2 helmets. How many helmets are there in total?",
+    "surface": "A cargo ring has 6 docks. Each dock contains 3 crates. Each crate contains 2 power cores. How many power cores are there in total?",
+    "inverse": "A depot has 36 helmets stored across 6 stations. Each station has 3 pods. How many helmets are in each pod?",
+    "answers": { "original": "36", "surface": "36", "inverse": "2" }
+  },
+  {
+    "id": "nested_chain_multiplication_006",
+    "family_id": "nested_chain_multiplication",
+    "logic_template": "a * b * c = total",
+    "difficulty": 2,
+    "original": "A lab has 3 tanks. Each tank stores 5 crates. Each crate contains 6 tubes. How many tubes are there in total?",
+    "surface": "A deep facility has 3 vault rooms. Each room stores 5 lockers. Each locker contains 6 sensor rods. How many sensor rods are there in total?",
+    "inverse": "A lab has 90 tubes stored in 3 tanks. Each tank stores 5 crates. How many tubes are in each crate?",
+    "answers": { "original": "90", "surface": "90", "inverse": "6" }
+  }
+]
